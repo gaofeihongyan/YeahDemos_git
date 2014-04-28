@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/volume_seek_bar"
+        android:src="@drawable/fragment_player_volume_bar_left" />
+
+    <!--
+         <com.pulque.VerticalSeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="0"
+        android:secondaryProgress="0" />
+                    android:progressDrawable="@drawable/seek_bar_volume_drawable"
+    -->
+
+    <RelativeLayout
+        android:id="@+id/volume_seek_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/fragment_player_volume_bar_big_bg" >
+
+        <org.yeah.view.VerticalSeekBar
+            android:id="@+id/volume_seek"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:max="100"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:progress="50"
+            android:progressDrawable="@drawable/seek_bar_volume_drawable"
+            android:secondaryProgress="0"
+            android:thumb="@drawable/fragment_player_volume_bar_thumb"
+            android:thumbOffset="10px" />
+    </RelativeLayout>
+
+    <SeekBar
+        android:id="@+id/progress_seek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:progress="50"
+        android:progressDrawable="@drawable/seek_bar_play_progress_drawable"
+        android:secondaryProgress="0"
+        android:thumb="@drawable/fragment_player_progress_bar_thumb" />
+
+</LinearLayout>

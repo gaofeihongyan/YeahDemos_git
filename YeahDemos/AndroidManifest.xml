@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.yeah"
+    android:versionCode="2"
+    android:versionName="2.0" >
+
+    <!-- android:sharedUserId="android.uid.system" -->
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-sdk android:minSdkVersion="8" />
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".YeahDemos"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.TestActivity"
+            android:label="TestActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.VerticalSeekbarActivity"
+            android:label="VerticalSeekbarActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.ArcSeekBarTestActivity"
+            android:label="ArcBarTestActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.AssertTest"
+            android:label="AssertTest" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.ECDKeyActivity"
+            android:label="ECDKeyActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".activity.MountEventReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.UMS_CONNECTED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".activity.LoadResTestActivity"
+            android:label="LoadResTestActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
