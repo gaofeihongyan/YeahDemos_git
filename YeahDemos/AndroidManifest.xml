@@ -33,6 +33,33 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.ArcSeekBar2TestActivity"
+            android:label="ArcSeekBar2TestActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SmileVolumeSeekBarTestActivity"
+            android:label="SmileVolumeSeekBarTestActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.CompoundButtonTestActivity"
+            android:label="CompoundButtonTestActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activity.VerticalSeekbarActivity"
             android:label="VerticalSeekbarActivity" >
             <intent-filter>

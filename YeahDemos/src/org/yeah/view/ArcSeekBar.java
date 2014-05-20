@@ -1,7 +1,7 @@
 /**
  * @author harry
- * @version 6
- * @date 2013/12/14
+ * @version 1
+ * @date 2014/5/13
  */
 
 package org.yeah.view;
@@ -12,7 +12,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.graphics.RadialGradient;
 import android.graphics.RectF;
+import android.graphics.Shader.TileMode;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,7 +29,7 @@ import org.yeah.R;
  */
 public class ArcSeekBar extends View {
 
-    public static final String TAG = "CircularSeekBar";
+    public static final String TAG = "ArcSeekBar";
 
     /** The context */
     private Context mContext;
@@ -36,8 +40,11 @@ public class ArcSeekBar extends View {
     /** The listener to listen for changes */
     private OnSwitchChangeListener mSwitchChaneListener;
 
-    /** The color of the progress ring */
+    /** The paint of the progress ring */
     private Paint arcPaint;
+
+    /** The paint of the progress text */
+    private TextPaint textPaint;
 
     /** The width of the view */
     private int width;
@@ -79,10 +86,10 @@ public class ArcSeekBar extends View {
     private float bottom;
 
     /** The X coordinate for the top left corner of the marking drawable */
-    private float dx;
+    private float thumbX;
 
     /** The Y coordinate for the top left corner of the marking drawable */
-    private float dy;
+    private float thumbY;
 
     /**
      * The X coordinate for the current position of the marker, pre adjustment
@@ -111,7 +118,7 @@ public class ArcSeekBar extends View {
      * The flag to see if the setProgress() method was called from our own
      * View's setAngle() method, or externally by a user.
      */
-    private boolean CALLED_FROM_ANGLE = false;
+    // private boolean CALLED_FROM_ANGLE = false;
 
     /** The rectangle containing our circles and arcs. */
     private RectF rect = new RectF();
@@ -165,22 +172,7 @@ public class ArcSeekBar extends View {
         init();
     }
 
-    private Bitmap mSwitchOn;
-    private Bitmap mSwitchOff;
-
-    private boolean mIsSwitchOn = true;
-
-    public void setSwitchStatus(boolean status) {
-        mIsSwitchOn = status;
-        invalidate();
-        if (mSwitchChaneListener != null)
-            mSwitchChaneListener.onSwitchChange(this, mIsSwitchOn);
-
-    }
-
-    public boolean getSwitchStatus() {
-        return mIsSwitchOn;
-    }
+    // Path textPath;
 
     /**
      * Inits the drawable.
@@ -188,28 +180,34 @@ public class ArcSeekBar extends View {
     public void init() {
 
         arcPaint = new Paint();
-        arcPaint.setColor(Color.BLUE);
+        arcPaint.setColor(Color.GREEN);
         arcPaint.setStyle(Paint.Style.STROKE);
+        // arcPaint.setStrokeCap(Cap.ROUND);
         arcPaint.setAntiAlias(true);
-        arcPaint.setStrokeWidth(8);
+        // arcPaint.setStrokeWidth(30);
+
+        textPaint = new TextPaint();
+        textPaint.setColor(Color.parseColor("#00a600"));
+        textPaint.setTextAlign(Align.CENTER);
+        textPaint.setStrokeWidth(25);
+        textPaint.setTextSize(45);
+
+        // textPath = new Path();
+        // textPath.moveTo(cx, cy);
+        // textPath.lineTo(cx, cy);
 
         progressMark = BitmapFactory.decodeResource(mContext.getResources(),
                 R.drawable.scrubber_control_normal_holo);
         progressMarkPressed = BitmapFactory.decodeResource(mContext.getResources(),
                 R.drawable.scrubber_control_pressed_holo);
-        mSwitchOn = BitmapFactory.decodeResource(mContext.getResources(),
-                R.drawable.light_seekbar_switch_on);
-        mSwitchOff = BitmapFactory.decodeResource(mContext.getResources(),
-                R.drawable.light_seekbar_switch_off);
-
-        mSeekbarBgBitmap = mSwitchOn;
+        mSeekbarBgBitmap = BitmapFactory.decodeResource(mContext.getResources(),
+                R.drawable.light_brightness_seekbar_bg);
     }
 
-    private float arcRadiusAdjust;
+    private float arcRadiusAdjustInBitmap;
     private float arcRadius;
-    private float centerSwitchBtnRadius;
-    private float baseX = 0;
-    private float baseY = 0;
+    // private float baseX = 0;
+    // private float baseY = 0;
 
     private int viewWidth;
     private int viewHeight;
@@ -232,6 +230,8 @@ public class ArcSeekBar extends View {
         return size;
     }
 
+    RadialGradient mRadialGradient;
+
     /*
      * (non-Javadoc)
      * @see android.view.View#onMeasure(int, int)
@@ -249,39 +249,54 @@ public class ArcSeekBar extends View {
         width = mSeekbarBgBitmap.getWidth();
         height = mSeekbarBgBitmap.getHeight();
 
-        baseX = (viewWidth - width) / 2;
-        baseY = (viewWidth - height) / 2;
-        Log.i(TAG, " baseX: " + baseX);
-        Log.i(TAG, " baseX: " + baseX);
+        // baseX = (viewWidth - width) / 2;
+        // baseY = (viewWidth - height) / 2;
 
-        cx = baseX + (width / 2); // Center X for circle
-        cy = baseY + (height / 2); // Center Y for circle
+        cx = width / 2; // Center X for circle
+        cy = height / 2; // Center Y for circle
         // Log.i(TAG, " cx: " + cx);
         // Log.i(TAG, " cy: " + cy);
 
-        outerRadius = 345 / 2;
-        innerRadius = outerRadius - (23 + 18);
-        // the distance of from bitmap edge to arc
-        arcRadiusAdjust = 25 + 23;
+        // the distance of from bitmap edge to arc ring
+        // 0.1818 = 140 / 770
+        arcRadiusAdjustInBitmap = width * 0.1818f;
         // Radius of the arc
-        arcRadius = cx - arcRadiusAdjust;
-        centerSwitchBtnRadius = cx - 85;
+        arcRadius = cx - arcRadiusAdjustInBitmap;
 
-        Log.i(TAG, " outerRadius: " + outerRadius);
-        Log.i(TAG, " innerRadius: " + innerRadius);
-        Log.i(TAG, " arcRadiusAdjust: " + arcRadiusAdjust);
-        Log.i(TAG, " arcRadius: " + arcRadius);
+        float arcWidthInBitmap = width * 0.1f;
+        outerRadius = arcRadius + arcWidthInBitmap;
+        innerRadius = arcRadius - arcWidthInBitmap;
+
+        arcPaint.setStrokeWidth(arcWidthInBitmap);
+
+        // Log.i(TAG, " arcRadius: " + arcRadius);
+
+        // Log.i(TAG, " outerRadius: " + outerRadius);
+        // Log.i(TAG, " innerRadius: " + innerRadius);
+        // Log.i(TAG, " arcRadiusAdjust: " + arcRadiusAdjust);
+        // Log.i(TAG, " arcRadius: " + arcRadius);
 
         // Calculate left bound of our rect
-        left = baseX + arcRadiusAdjust;
+        left = arcRadiusAdjustInBitmap;
         // Calculate right bound of our rect
-        right = baseX + width - arcRadiusAdjust;
+        right = width - arcRadiusAdjustInBitmap;
         // Calculate top bound of our rect
-        top = baseY + arcRadiusAdjust;
+        top = arcRadiusAdjustInBitmap;
         // Calculate bottom bound ofour rect
-        bottom = baseY + height - arcRadiusAdjust;
+        bottom = height - arcRadiusAdjustInBitmap;
 
         rect.set(left, top, right, bottom); // assign size to rect
+
+        if (mRadialGradient == null) {
+            int[] colors = new int[] {
+                    Color.parseColor("#00d200"), Color.parseColor("#00a600")
+            };
+            mRadialGradient = new RadialGradient(cx, cy, arcRadius,
+                    colors, null, TileMode.REPEAT);
+        }
+
+        arcPaint.setShader(mRadialGradient);
+        // arcPaint.setShadowLayer(arcRadius, cx, cy, Color.RED);
     }
 
     /*
@@ -291,11 +306,7 @@ public class ArcSeekBar extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 
-        if (mIsSwitchOn) {
-            canvas.drawBitmap(mSwitchOn, baseX, baseY, null);
-        } else {
-            canvas.drawBitmap(mSwitchOff, baseX, baseY, null);
-        }
+        canvas.drawBitmap(mSeekbarBgBitmap, 0, 0, null);
         // canvas.drawBitmap(mSeekbarBgBitmap, baseX, baseY, null);
         // canvas.drawRect(rect, arcPaint);
         // canvas.drawPoint(cx, cy, arcPaint);
@@ -304,8 +315,11 @@ public class ArcSeekBar extends View {
         // canvas.drawCircle(cx, cy, innerRadius, innerColor);
 
         canvas.drawArc(rect, startAngle, angle, false, arcPaint);
-        dx = getXFromAngle();
-        dy = getYFromAngle();
+        // canvas.drawTextOnPath(getProgressPercent() + "%", textPath, -5, 5,
+        // textPaint);
+        canvas.drawText(getProgressPercent() + "%", cx, cy + 15, textPaint);
+        // thumbX = getXFromAngle();
+        // thumbY = getYFromAngle();
         // drawMarkerAtProgress(canvas);
 
         super.onDraw(canvas);
@@ -326,14 +340,14 @@ public class ArcSeekBar extends View {
         boolean up = false;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                CALLED_FROM_USER = false;
+                // CALLED_FROM_USER = false;
                 moved(x, y, up);
                 break;
             case MotionEvent.ACTION_MOVE:
                 moved(x, y, up);
                 break;
             case MotionEvent.ACTION_UP:
-                CALLED_FROM_USER = true;
+                // CALLED_FROM_USER = true;
                 up = true;
                 moved(x, y, up);
                 break;
@@ -344,10 +358,13 @@ public class ArcSeekBar extends View {
     /** The angle of progress */
     private int angle = 0;
 
-    private int startAngle = 180;
+    /**
+     * 圆弧起始角度，单位为度
+     */
+    private int startAngle = 97;
 
     /** The maximum progress amount */
-    private int maxAngle = 180;
+    private int maxAngle = 348;
 
     /**
      * Moved.
@@ -362,39 +379,32 @@ public class ArcSeekBar extends View {
         if (!up) {
             if (distance < outerRadius && distance > innerRadius) {
 
-                if (!mIsSwitchOn) {
-                    return;
-                }
                 IS_PRESSED = true;
-                /*
-                 * float degrees = (float) ((float)
-                 * ((((Math.toDegrees(Math.atan2(x - cx, cy - y)) + 360.0)) %
-                 * 360.0) + 125) % 360.0); float degrees = (float) ((float)
-                 * (Math.toDegrees(Math.atan2(x - cx, cy - y)) + 125.0) % 360);
-                 */
-                float degrees = (float) ((Math.toDegrees(Math.atan2(y - cy, x - cx)) + 180) % 360);
-                // Log.i(TAG, " moved -->  degrees1111 : " + degrees);
+
+                // 1.Math.atan2(x,y)函数返回点（x,y)和原点(0,0)之间连线的倾斜角，所以可以用它实现计算出两点间连线的夹角
+                // 或者說实现直角坐标系向极坐标系的转换。
+                // 2.toDegrees(): 2 * Math.PI
+                float degrees = (float) ((Math.toDegrees(Math.atan2(y - cy, x - cx)) + 260) % 360);
+                Log.i("harry", " moved -->  degrees1111 : " + degrees);
                 if (degrees < 0 || degrees > maxAngle) {
-                    // degrees += 2 * Math.PI;
                     return;
                 }
 
                 setAngle(Math.round(degrees));
             }
         } else {
-            if (distance <= centerSwitchBtnRadius) {
+            /*
+             * if (distance <= centerSwitchBtnRadius) { mIsSwitchOn =
+             * mIsSwitchOn ? false : true; Log.i(TAG,
+             * " moved -->  mIsSwitchOn : " + mIsSwitchOn); if
+             * (mSwitchChaneListener != null)
+             * playSoundEffect(SoundEffectConstants.CLICK);
+             * mSwitchChaneListener.onSwitchChange(this, mIsSwitchOn); return; }
+             */
 
-                mIsSwitchOn = mIsSwitchOn ? false : true;
-                Log.i(TAG, " moved -->  mIsSwitchOn : " + mIsSwitchOn);
-                if (mSwitchChaneListener != null)
-                    mSwitchChaneListener.onSwitchChange(this, mIsSwitchOn);
-            }
-
-            if (distance < outerRadius && distance > innerRadius) {
-                Log.i(TAG, " moved -->  mSeekChangeListener.onProgressChange");
-                if (mSeekChangeListener != null)
-                    mSeekChangeListener.onProgressChange(this, this.progress);
-            }
+            Log.i(TAG, " moved -->  mSeekChangeListener.onProgressChange");
+            if (mSeekChangeListener != null)
+                mSeekChangeListener.onProgressChange(this, this.progress);
             IS_PRESSED = false;
             invalidate();
         }
@@ -408,9 +418,9 @@ public class ArcSeekBar extends View {
      */
     public void drawMarkerAtProgress(Canvas canvas) {
         if (IS_PRESSED) {
-            canvas.drawBitmap(progressMarkPressed, dx, dy, null);
+            canvas.drawBitmap(progressMarkPressed, thumbX, thumbY, null);
         } else {
-            canvas.drawBitmap(progressMark, dx, dy, null);
+            canvas.drawBitmap(progressMark, thumbX, thumbY, null);
         }
     }
 
@@ -447,27 +457,21 @@ public class ArcSeekBar extends View {
     }
 
     /**
-     * Get the angle.
-     * 
-     * @return the angle
-     */
-    // public int getAngle() {
-    // return angle;
-    // }
-
-    /**
      * Set the angle.
      * 
      * @param angle the new angle
      */
     private void setAngle(int angle) {
-        Log.i(TAG, "setAngle: " + angle);
+        // Log.i(TAG, "setAngle: " + angle);
         this.angle = angle;
-        float donePercent = (((float) this.angle) / maxAngle) * 100;
+        float donePercent = (((float) Math.abs(this.angle)) / maxAngle) * 100;
         float progress = (donePercent / 100) * getMaxProgress();
-        CALLED_FROM_ANGLE = true;
-        setProgressPercent(Math.round(donePercent));
-        setProgress(Math.round(progress));
+        // CALLED_FROM_ANGLE = true;
+        // setProgressPercent(Math.round(donePercent));
+        this.progressPercent = Math.round(donePercent);
+        // setProgress(Math.round(progress), false);
+        this.progress = Math.round(progress);
+        this.invalidate();
     }
 
     /**
@@ -497,27 +501,32 @@ public class ArcSeekBar extends View {
         return progress;
     }
 
-    private boolean CALLED_FROM_USER = true;
+    // private boolean CALLED_FROM_USER = true;
 
     /**
      * Sets the progress.
      * 
-     * @param progress the new progress
+     * @param progress the new progress.
+     * @param isCallSeekChangeListener if call the seek change listener.
      */
-    public void setProgress(int progress) {
+    public void setProgress(int progress, boolean isCallSeekChangeListener) {
         Log.i(TAG, "setProgress: " + progress);
         if (this.progress != progress) {
             this.progress = progress;
-            if (!CALLED_FROM_ANGLE) {
-                float newPercent = (this.progress / this.maxProgress) * 100;
-                setProgressPercent((int) newPercent);
-                float newAngle = (newPercent / 100) * maxAngle;
-                this.setAngle((int) newAngle);
-            }
-            if (CALLED_FROM_USER && mSeekChangeListener != null)
+            // if (!CALLED_FROM_ANGLE) {
+            float newPercent = (this.progress / this.maxProgress) * 100;
+            // setProgressPercent((int) newPercent);
+            Log.i(TAG, "newPercent: " + newPercent);
+            this.progressPercent = (int) newPercent;
+            Log.i(TAG, "progressPercent: " + progressPercent);
+            float newAngle = (newPercent / 100) * maxAngle;
+            this.setAngle(Math.round(newAngle));
+            // }
+            if (mSeekChangeListener != null && isCallSeekChangeListener) {
                 mSeekChangeListener.onProgressChange(this, this.progress);
-            CALLED_FROM_ANGLE = false;
-            this.invalidate();
+            }
+            // CALLED_FROM_ANGLE = false;
+            // this.invalidate();
         }
     }
 
@@ -535,19 +544,12 @@ public class ArcSeekBar extends View {
      * Sets the progress percent.
      * 
      * @param progressPercent the new progress percent
+     * @param isCallSeekChangeListener if call the seek change listener.
      */
-    public void setProgressPercent(int newProgressPercent) {
+    public void setProgressPercent(int newProgressPercent, boolean isCallSeekChangeListener) {
         Log.i(TAG, "setProgressPercent: " + newProgressPercent);
-        this.progressPercent = newProgressPercent;
-    }
-
-    /**
-     * Sets the progress color.
-     * 
-     * @param color the new progress color
-     */
-    public void setProgressColor(int color) {
-        arcPaint.setColor(color);
+        setProgress(Math.round((float) ((float) newProgressPercent / 100.0) * maxProgress),
+                isCallSeekChangeListener);
     }
 
     /**

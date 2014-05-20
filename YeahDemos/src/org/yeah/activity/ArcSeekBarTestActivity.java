@@ -55,7 +55,7 @@ public class ArcSeekBarTestActivity extends Activity {
             }
         });
         
-        cs.setProgress(100);
+        cs.setProgress(100,false);
         // cs.setAngle(90);
         
         cs.setOnSwitchChangeListener(new OnSwitchChangeListener() {
