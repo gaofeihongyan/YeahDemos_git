@@ -32,6 +32,25 @@
                 <category android:name="org.yeah.TEST_CODE" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".fragmenttabhost.FragmentTabhostTestActivity"
+            android:label="FragmentTabhostTestActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.DrawableLayerListTest"
+            android:label="DrawableLayerListTest" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="org.yeah.TEST_CODE" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.ArcSeekBar2TestActivity"
             android:label="ArcSeekBar2TestActivity" >

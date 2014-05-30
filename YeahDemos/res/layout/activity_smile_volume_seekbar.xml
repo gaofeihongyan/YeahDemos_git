@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res/org.yeah"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/bg"
     android:orientation="vertical" >
 
     <TextView
@@ -16,7 +17,7 @@
     <org.yeah.view.SmileVolumeSeekBar
         android:id="@+id/seekbar"
         android:layout_width="wrap_content"
-        android:background="@drawable/bg"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="#123456" />
 
 </LinearLayout>

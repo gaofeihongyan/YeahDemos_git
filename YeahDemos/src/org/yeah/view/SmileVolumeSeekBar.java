@@ -222,45 +222,54 @@ public class SmileVolumeSeekBar extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        viewWidth = getMeasuredLength(widthMeasureSpec, true);
-        viewHeight = getMeasuredLength(heightMeasureSpec, false);
-        setMeasuredDimension(viewWidth, viewHeight);
-        // Log.i(TAG, " 1111viewWidth: " + viewWidth);
-        // Log.i(TAG, " 1111viewHeight: " + viewHeight);
-
         width = mSeekbarBgBitmap.getWidth();
         height = mSeekbarBgBitmap.getHeight();
 
-        // baseX = (viewWidth - width) / 2;
-        // baseY = (viewWidth - height) / 2;
-        // Log.i(TAG, " baseX: " + baseX);
-        // Log.i(TAG, " baseX: " + baseX);
+        // Center X for circle
+        cx = width / 2;
 
-        cx = width / 2; // Center X for circle
-        cy = height / 2; // Center Y for circle
+        // Center Y for circle
+        // cy = height / 2;
+        // cy = 0;
+        //cy = -height / 2;
+        cy = -height;
+
         // Log.i(TAG, " cx: " + cx);
         // Log.i(TAG, " cy: " + cy);
 
         // the distance of from bitmap edge to arc
         // 42 / 915 = 0.04590164
-        arcRadiusAdjustInBitmap = width * 0.046f;
+        // 69/966 = 0.07142857
+        arcRadiusAdjustInBitmap = width * 0.071f;
         // Radius of the arc
         arcRadius = cx - arcRadiusAdjustInBitmap;
         // Log.i(TAG, " arcRadius: " + arcRadius);
 
-        // 0.06557377 = 60 / 915
-        float arcWithInBitmap = width * 0.065f;
+        // 60 / 915 =0.06557377
+        // 71 / 966 = 0.07349896
+        float arcWithInBitmap = width * 0.070f;
         outerRadius = arcRadius + arcWithInBitmap;
         innerRadius = arcRadius - arcWithInBitmap;
 
         arcPaint.setStrokeWidth(arcWithInBitmap);
 
         // Calculate left bound of our rect
+        // left = arcRadiusAdjustInBitmap;
+        // Calculate right bound of our rect
+        // right = width - arcRadiusAdjustInBitmap;
+        // Calculate top bound of our rect
+        // top = arcRadiusAdjustInBitmap;
+        // Calculate bottom bound ofour rect
+        // bottom = height - arcRadiusAdjustInBitmap;
+
+        // rect.set(left, -bottom, right, bottom); // assign size to rect
+
+        // Calculate left bound of our rect
         left = arcRadiusAdjustInBitmap;
         // Calculate right bound of our rect
         right = width - arcRadiusAdjustInBitmap;
         // Calculate top bound of our rect
-        top = arcRadiusAdjustInBitmap;
+        top = -(3 * height - arcRadiusAdjustInBitmap);
         // Calculate bottom bound ofour rect
         bottom = height - arcRadiusAdjustInBitmap;
 
@@ -280,6 +289,12 @@ public class SmileVolumeSeekBar extends View {
         // BlurMaskFilter blurMaskFilter = new BlurMaskFilter(arcRadius,
         // BlurMaskFilter.Blur.OUTER);
         // arcPaint.setMaskFilter(blurMaskFilter);
+
+        viewWidth = getMeasuredLength(widthMeasureSpec, true);
+        viewHeight = getMeasuredLength(heightMeasureSpec, false);
+        setMeasuredDimension(viewWidth, viewHeight);
+        // Log.i(TAG, " 1111viewWidth: " + viewWidth);
+        // Log.i(TAG, " 1111viewHeight: " + viewHeight);
     }
 
     /*
@@ -298,6 +313,8 @@ public class SmileVolumeSeekBar extends View {
         // canvas.drawCircle(cx, cy, innerRadius, innerColor);
 
         canvas.drawArc(rect, startAngle, angle, false, arcPaint);
+        // canvas.drawCircle(cx, 0, arcRadius, arcPaint);
+        // canvas.drawRect(rect, arcPaint);
         thumbX = getXFromAngle();
         thumbY = getYFromAngle();
         drawMarkerAtProgress(canvas);
@@ -357,11 +374,9 @@ public class SmileVolumeSeekBar extends View {
                 + Math.pow((y - cy), 2));
         if (!up) {
             if (distance < outerRadius && distance > innerRadius) {
-
                 IS_PRESSED = true;
 
-                // 1.Math.atan2(x,y)函数返回点（x,y)和原点(0,0)之间连线的倾斜角，所以可以用它实现计算出两点间连线的夹角
-                // 或者說实现直角坐标系向极坐标系的转换。
+                // 1.Math.atan2(x,y)函数返回点（x,y)和原点(0,0)之间连线的倾斜角，所以可以用它实现计算出两点间连线的夹角或者說实现直角坐标系向极坐标系的转换。
                 // 2.toDegrees(): 2 * Math.PI
                 float degrees = (float) (Math.toDegrees(Math.atan2(y - cy, x
                         - cx)) - 127);
@@ -438,8 +453,8 @@ public class SmileVolumeSeekBar extends View {
         this.angle = angle;
         float donePercent = (((float) this.angle) / maxAngle) * 100;
         float progress = (donePercent / 100) * getMaxProgress();
-        Log.i("harry", "setAngle -->  " + donePercent);
-        Log.i("harry", "progress -->  " + progress);
+        // Log.i("harry", "setAngle -->  " + donePercent);
+        // Log.i("harry", "progress -->  " + progress);
         // CALLED_FROM_ANGLE = true;
         // setProgressPercent(Math.round(donePercent));
         this.progressPercent = Math.round(Math.abs(donePercent));

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/ctl_previous"
+        android:drawable="@drawable/fragment_previous_btn_selector"
+        android:right="50dp">
+    </item>
+    <item
+        android:id="@+id/ctl_next"
+        android:drawable="@drawable/fragment_next_btn_selector"
+        android:left="50dp">
+    </item>
+    <item
+        android:id="@+id/ctl_pause"
+        android:drawable="@drawable/fragment_pause_btn_selector">
+    </item>
+
+</layer-list>

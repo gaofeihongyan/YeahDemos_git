@@ -25,7 +25,7 @@ public class LoadResTestActivity extends Activity implements OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_test);
         //setContentView(new DragView(this));
         
         //ActivityManager am = (ActivityManager)this.getSystemService(this.ACTIVITY_SERVICE);

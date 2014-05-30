@@ -248,6 +248,7 @@ public class ArcSeekBar extends View {
 
         width = mSeekbarBgBitmap.getWidth();
         height = mSeekbarBgBitmap.getHeight();
+        Log.i("harry", " width: " + width);
 
         // baseX = (viewWidth - width) / 2;
         // baseY = (viewWidth - height) / 2;
@@ -385,7 +386,7 @@ public class ArcSeekBar extends View {
                 // 或者說实现直角坐标系向极坐标系的转换。
                 // 2.toDegrees(): 2 * Math.PI
                 float degrees = (float) ((Math.toDegrees(Math.atan2(y - cy, x - cx)) + 260) % 360);
-                Log.i("harry", " moved -->  degrees1111 : " + degrees);
+                Log.i("harry", " moved -->  degrees: " + degrees);
                 if (degrees < 0 || degrees > maxAngle) {
                     return;
                 }
