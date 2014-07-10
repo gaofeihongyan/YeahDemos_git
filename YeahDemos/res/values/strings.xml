@@ -3,5 +3,17 @@
 
     <string name="hello">Hello World, TestActivity!</string>
     <string name="app_name">YeahDemos</string>
+    
+        <!-- **************************************************************************************** -->
+    <string name="getdevice">正在获取数据&#8230;</string>
+    <string name="watchfail">连接超时,观看失败</string>
+    <string name="photook">抓拍成功</string>
+    <string name="recordstart">开始录像&#8230;</string>
+    <string name="recordend">录像结束 </string>
+    <string name="audiostart">开启音频 </string>
+    <string name="audioend">结束音频 </string>
+    <string name="external_storage">请接入外部存储设备</string>
+    <string name="lookingNow">视频正在播放</string>
+    <string name="shut_video">正在释放资源&#8230;</string>
 
 </resources>

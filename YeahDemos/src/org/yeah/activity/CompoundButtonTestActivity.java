@@ -66,15 +66,19 @@ public class CompoundButtonTestActivity extends Activity {
          * Test SlideSwitchView
          */
         mSlideSwitchView = (SlideSwitchView) findViewById(R.id.mSlideSwitchView);
-        mSlideSwitchView.setOnChangeListener(new OnSwitchChangedListener() {
+        mSlideSwitchView.setChecked(false);
+        mSlideSwitchView.setOnSwitchChangedListener(new OnSwitchChangedListener() {
 
             @Override
             public void onSwitchChange(SlideSwitchView switchView, boolean isChecked) {
                 // TODO Auto-generated method stub
                     Log.d("harry","isChecked: " + isChecked);
+                    mSlideSwitchView.setChecked(true);
 
             }
         });
+        
+        
     }
 
     @Override

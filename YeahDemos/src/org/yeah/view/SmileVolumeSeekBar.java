@@ -231,7 +231,7 @@ public class SmileVolumeSeekBar extends View {
         // Center Y for circle
         // cy = height / 2;
         // cy = 0;
-        //cy = -height / 2;
+        // cy = -height / 2;
         cy = -height;
 
         // Log.i(TAG, " cx: " + cx);
@@ -498,6 +498,10 @@ public class SmileVolumeSeekBar extends View {
      */
     public void setProgress(int progress, boolean isCallSeekChangeListener) {
         Log.i(TAG, "setProgress: " + progress);
+        if (progress > getMaxProgress()) {
+            Log.i(TAG, " oh, my got! progress > getMaxProgress,so do not setProgress");
+            return;
+        }
         if (this.progress != progress) {
             this.progress = progress;
             // if (!CALLED_FROM_ANGLE) {

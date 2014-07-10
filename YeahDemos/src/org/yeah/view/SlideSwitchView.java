@@ -18,9 +18,9 @@ import android.view.View;
 import org.yeah.R;
 
 public class SlideSwitchView extends View {
-    
+
     private final static String TAG = "SlideSwitchView";
-    
+
     /** Switch底部样式图片 */
     private Bitmap mSwitchBottom;
     /** Switch 当前样式 */
@@ -116,7 +116,7 @@ public class SlideSwitchView extends View {
                         mSwitchFrame.getHeight());
             }
         }
-        //Log.d(TAG, "mAlpha:" + mAlpha);
+        // Log.d(TAG, "mAlpha:" + mAlpha);
         canvas.saveLayerAlpha(new RectF(mDest), mAlpha, Canvas.MATRIX_SAVE_FLAG
                 | Canvas.CLIP_SAVE_FLAG | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
                 | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
@@ -199,7 +199,7 @@ public class SlideSwitchView extends View {
     /**
      * 设置 switch 状态监听
      */
-    public void setOnChangeListener(OnSwitchChangedListener listener) {
+    public void setOnSwitchChangedListener(OnSwitchChangedListener listener) {
         switchListener = listener;
     }
 

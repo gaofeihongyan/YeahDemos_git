@@ -55,9 +55,8 @@ public class FragmentTabAdapter implements RadioGroup.OnCheckedChangeListener {
                 } else {
                     ft.add(mFragmentFramelayoutResId, fragment);
                 }
-                //showTab(i); // 显示目标tab
-                ft.show(fragment);
                 ft.commit();
+                showTab(i); // 显示目标tab
 
                 // 如果设置了切换tab额外功能功能接口
                 if (null != mTabCheckedChangedListener) {

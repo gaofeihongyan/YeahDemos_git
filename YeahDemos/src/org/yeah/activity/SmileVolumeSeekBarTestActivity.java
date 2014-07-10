@@ -32,7 +32,7 @@ public class SmileVolumeSeekBarTestActivity extends Activity {
         final SmileVolumeSeekBar cs = (SmileVolumeSeekBar) findViewById(R.id.seekbar);
         final TextView tv = (TextView) findViewById(R.id.tv);
 
-        cs.setMaxProgress(100);
+        cs.setMaxProgress(8);
 
         cs.setOnSeekChangeListener(new OnSeekChangeListener() {
 
@@ -52,8 +52,8 @@ public class SmileVolumeSeekBarTestActivity extends Activity {
         tv.setText("ProgressPercent: " + cs.getProgressPercent() + "%--" + "progress: "
                 + cs.getProgress());
         
-        //cs.setProgress(50, false);
-        cs.setProgressPercent(50,true);
+        cs.setProgress(9, false);
+        //cs.setProgressPercent(50,true);
         // cs.setAngle(90);
 
     }
