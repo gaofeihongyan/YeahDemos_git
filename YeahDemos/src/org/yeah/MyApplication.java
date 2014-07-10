@@ -19,9 +19,9 @@ public class MyApplication extends Application {
     private List<Activity> activityList = new LinkedList<Activity>();
     private static MyApplication instance;
 
-    static {
-        ToolUtil.loadLib();
-    }
+    // static {
+    // ToolUtil.loadLib();
+    // }
 
     // ����ģʽ�л�ȡΨһ��MyApplicationʵ��
     public static MyApplication getInstance() {
