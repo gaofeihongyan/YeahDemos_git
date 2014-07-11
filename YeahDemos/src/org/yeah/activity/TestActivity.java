@@ -38,8 +38,7 @@ public class TestActivity extends Activity implements OnClickListener {
 		Button btn2;
 		Button btn3;
 		Button btn4;
-		Button btn5;
-		Button btn6;
+		Button btn5;	Button btn6;
 		Intent intent = new Intent();
 
 		/** Called when the activity is first created. */
