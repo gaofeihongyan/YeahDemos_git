@@ -96,7 +96,7 @@ public class PopMenuTestActivity extends Activity {
 				if (requestCode == Tools.REQUEST_CODE_PICK_IMAGE) {
 						if (data != null) {
 								Uri uri = data.getData();
-								Tools.log("onActivityResult --> REQUEST_CODE_PICK_IMAGE uri: "
+								Tools.Log("onActivityResult --> REQUEST_CODE_PICK_IMAGE uri: "
 												+ uri);
 								// to do find the path of pic by uri
 								if (mHeadImage.getVisibility() == View.GONE)
@@ -126,7 +126,7 @@ public class PopMenuTestActivity extends Activity {
 										// to do find the path of pic by uri
 										mHeadImage.setImageBitmap(Tools.getBitmapFromUri(this, uri));
 								}
-								Tools.log("onActivityResult --> REQUEST_CODE_CAPTURE_CAMEIA uri: "
+								Tools.Log("onActivityResult --> REQUEST_CODE_CAPTURE_CAMEIA uri: "
 												+ uri);
 						}
 				}
