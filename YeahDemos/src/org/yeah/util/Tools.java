@@ -31,193 +31,193 @@ import java.util.Scanner;
 
 public class Tools {
 
-		private static final String TAG = Tools.class.getSimpleName();
+	private static final String TAG = Tools.class.getSimpleName();
 
-		public static final int REQUEST_CODE_PICK_IMAGE = 0x100;
-		public static final int REQUEST_CODE_CAPTURE_CAMEIA = 0x101;
+	public static final int REQUEST_CODE_PICK_IMAGE = 0x100;
+	public static final int REQUEST_CODE_CAPTURE_CAMEIA = 0x101;
 
-		public static void getImageFromAlbum(Activity activity) {
-				Intent intent = new Intent(Intent.ACTION_PICK);
-				intent.setType("image/*");// 相片类型
-				activity.startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+	public static void getImageFromAlbum(Activity activity) {
+		Intent intent = new Intent(Intent.ACTION_PICK);
+		intent.setType("image/*");// 相片类型
+		activity.startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+	}
+
+	public static void getImageFromCamera(Activity activity) {
+		String state = Environment.getExternalStorageState();
+		if (state.equals(Environment.MEDIA_MOUNTED)) {
+			Intent getImageByCamera = new Intent("android.media.action.IMAGE_CAPTURE");
+			activity.startActivityForResult(getImageByCamera,
+					REQUEST_CODE_CAPTURE_CAMEIA);
+		}
+		else {
+			Toast.makeText(activity, "请确认已经插入SD卡", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	public static boolean saveImage(Bitmap photo, String spath) {
+		try {
+			BufferedOutputStream bos = new BufferedOutputStream(
+					new FileOutputStream(spath, false));
+			photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+			bos.flush();
+			bos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public static Bitmap getBitmapFromUri(Activity activity, Uri uri) {
+		try {
+			// 读取uri所在的图片
+			Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+					activity.getContentResolver(), uri);
+			return bitmap;
+		} catch (Exception e) {
+			Log(e.getMessage());
+			Log("目录为：" + uri);
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * @param context
+	 * @param root
+	 * @param popView
+	 * @param location 0:up, 1:down, 2: left, 3:right
+	 */
+	public static PopupWindow showPopUp(Context context, View root, View popView,
+			int popLocation) {
+
+		PopupWindow popupWindow = new PopupWindow(popView, LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT, true);
+
+		popupWindow.setFocusable(true);
+		popupWindow.setOutsideTouchable(true);
+		//popupWindow.setAnimationStyle(R.style.popFromBottom);
+		popupWindow.setBackgroundDrawable(new BitmapDrawable());
+		// popupWindow.update();
+
+		int[] location = new int[2];
+		root.getLocationOnScreen(location);
+		Log("location[0]: " + location[0]);
+		Log("location[1]: " + location[1]);
+		Log("popupWindow.getWidth(): " + popupWindow.getWidth());
+		Log("root.getWidth(): " + root.getWidth());
+
+		if (popLocation == 0) {
+			popupWindow.showAtLocation(root, Gravity.NO_GRAVITY,
+					location[0],
+					location[1] - popupWindow.getHeight());
+		} else if (popLocation == 1) {
+			// down
+			// popupWindow.showAsDropDown(root);
+			// center down
+			// popupWindow.showAtLocation(root, Gravity.NO_GRAVITY,
+			// location[0] - popupWindow.getWidth(), location[1]);
+			// popupWindow.showAsDropDown(root, - ,0);
+			popupWindow.showAtLocation(root, Gravity.NO_GRAVITY,
+					location[0] - popupWindow.getWidth() / 2,
+					location[1] + root.getHeight());
+		} else if (popLocation == 2) {
+			// left
+			popupWindow.showAtLocation(root, Gravity.NO_GRAVITY,
+					location[0] - popupWindow.getWidth(), location[1]);
+		} else if (popLocation == 3) {
+			// right
+			popupWindow.showAtLocation(root, Gravity.CENTER,
+					0, 0);
+
 		}
 
-		public static void getImageFromCamera(Activity activity) {
-				String state = Environment.getExternalStorageState();
-				if (state.equals(Environment.MEDIA_MOUNTED)) {
-						Intent getImageByCamera = new Intent("android.media.action.IMAGE_CAPTURE");
-						activity.startActivityForResult(getImageByCamera,
-										REQUEST_CODE_CAPTURE_CAMEIA);
-				}
-				else {
-						Toast.makeText(activity, "请确认已经插入SD卡", Toast.LENGTH_LONG).show();
-				}
+		return popupWindow;
+	}
+
+	public String readKey() throws FileNotFoundException {
+
+		FileInputStream fis = new FileInputStream(new File("/factory/ecd.bin"));
+		Scanner sc = new Scanner(fis);
+
+		StringBuffer sb = new StringBuffer();
+
+		if (sc.hasNext()) {
+			String temp = sc.next();
+			for (int j = 0; j < temp.length(); j++) {
+				// if (j >= 96 && j < 96 + 9)
+				sb.append((char) (temp.charAt(j) + 3));
+			}
+			// Log.i("harry", "ecd.bin output: " + sb.toString());
+			return sb.toString();
 		}
 
-		public static boolean saveImage(Bitmap photo, String spath) {
-				try {
-						BufferedOutputStream bos = new BufferedOutputStream(
-										new FileOutputStream(spath, false));
-						photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-						bos.flush();
-						bos.close();
-				} catch (Exception e) {
-						e.printStackTrace();
-						return false;
-				}
-				return true;
-		}
+		return null;
+	}
 
-		public static Bitmap getBitmapFromUri(Activity activity, Uri uri) {
-				try {
-						// 读取uri所在的图片
-						Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-										activity.getContentResolver(), uri);
-						return bitmap;
-				} catch (Exception e) {
-						log(e.getMessage());
-						log("目录为：" + uri);
-						e.printStackTrace();
-						return null;
-				}
-		}
+	public static int dp2px(Context context, float dipValue) {
+		float m = context.getResources().getDisplayMetrics().density;
+		return (int) (dipValue * m + 0.5f);
+	}
 
-		/**
-		 * @param context
-		 * @param root
-		 * @param popView
-		 * @param location 0:up, 1:down, 2: left, 3:right
+	public static int px2dp(Context context, float pxValue) {
+		float m = context.getResources().getDisplayMetrics().density;
+		return (int) (pxValue / m + 0.5f);
+	}
+
+	/**
+	 * create notification
+	 * 
+	 * @param status
+	 */
+	private void createNotification(Context context, int id, String tickerText, String title,
+			String contentText,
+			int iconRes, PendingIntent contentIntent) {
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager nm = (NotificationManager) context.getSystemService(ns);
+		// create Notification
+		/*
+		 * final Notification notification = new
+		 * Notification.Builder(this).setContentTitle(title)
+		 * .setContentText(contentText
+		 * ).setTicker(tickerText).setContentIntent(contentIntent)
+		 * .setSmallIcon(iconRes).setOngoing(true) //
+		 * .setWhen(System.currentTimeMillis()) .getNotification();
+		 * nm.notify(id, notification);
 		 */
-		public static PopupWindow showPopUp(Context context, View root, View popView,
-						int popLocation) {
+		Log.i(TAG, "\n---------------createNotification: id: " + id + "  title: " + title);
+	}
 
-				PopupWindow popupWindow = new PopupWindow(popView, LayoutParams.WRAP_CONTENT,
-								LayoutParams.WRAP_CONTENT, true);
+	private void cancelNotification(Context context, int id) {
+		Log.i(TAG, "\n---------------cancelNotification: id: " + id);
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager mNotificationManager = (NotificationManager) context
+				.getSystemService(ns);
+		mNotificationManager.cancel(id);
+		// mNotificationManager.cancel(DOWNLOAD_PROGRESS);
+		// pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+	}
 
-				popupWindow.setFocusable(true);
-				popupWindow.setOutsideTouchable(true);
-				popupWindow.setAnimationStyle(R.style.popFromBottom);
-				popupWindow.setBackgroundDrawable(new BitmapDrawable());
-				//popupWindow.update();
+	private void showDialog(Context context, String msg) {
+		new AlertDialog.Builder(context)
+				.setMessage(msg)
+				.setPositiveButton(android.R.string.ok,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.cancel();
 
-				int[] location = new int[2];
-				root.getLocationOnScreen(location);
-				log("location[0]: "+ location[0]);
-				log("location[1]: "+ location[1]);
-				log("popupWindow.getWidth(): "+ popupWindow.getWidth());
-				log("root.getWidth(): "+ root.getWidth());
+							}
+						}).create().show();
+		String str;
+	}
 
-				if (popLocation == 0) {
-						popupWindow.showAtLocation(root, Gravity.NO_GRAVITY,
-										location[0],
-										location[1] - popupWindow.getHeight());
-				} else if (popLocation == 1) {
-						// down
-						// popupWindow.showAsDropDown(root);
-						// center down
-						// popupWindow.showAtLocation(root, Gravity.NO_GRAVITY,
-						// location[0] - popupWindow.getWidth(), location[1]);
-						// popupWindow.showAsDropDown(root, - ,0);
-						popupWindow.showAtLocation(root, Gravity.NO_GRAVITY,
-										location[0] - popupWindow.getWidth() / 2,
-										location[1] + root.getHeight());
-				} else if (popLocation == 2) {
-						// left
-						popupWindow.showAtLocation(root, Gravity.NO_GRAVITY,
-										location[0] - popupWindow.getWidth(), location[1]);
-				} else if (popLocation == 3) {
-						// right
-						popupWindow.showAtLocation(root, Gravity.NO_GRAVITY,
-										location[0] + root.getWidth(), location[1]);
+	public static void Log(String tag, String msg) {
+		Log.d(tag, "harry --> " + msg);
+	}
 
-				}
-
-				return popupWindow;
-		}
-
-		public String readKey() throws FileNotFoundException {
-
-				FileInputStream fis = new FileInputStream(new File("/factory/ecd.bin"));
-				Scanner sc = new Scanner(fis);
-
-				StringBuffer sb = new StringBuffer();
-
-				if (sc.hasNext()) {
-						String temp = sc.next();
-						for (int j = 0; j < temp.length(); j++) {
-								// if (j >= 96 && j < 96 + 9)
-								sb.append((char) (temp.charAt(j) + 3));
-						}
-						// Log.i("harry", "ecd.bin output: " + sb.toString());
-						return sb.toString();
-				}
-
-				return null;
-		}
-
-		public static int dp2px(Context context, float dipValue) {
-				float m = context.getResources().getDisplayMetrics().density;
-				return (int) (dipValue * m + 0.5f);
-		}
-
-		public static int px2dp(Context context, float pxValue) {
-				float m = context.getResources().getDisplayMetrics().density;
-				return (int) (pxValue / m + 0.5f);
-		}
-
-		/**
-		 * create notification
-		 * 
-		 * @param status
-		 */
-		private void createNotification(Context context, int id, String tickerText, String title,
-						String contentText,
-						int iconRes, PendingIntent contentIntent) {
-				String ns = Context.NOTIFICATION_SERVICE;
-				NotificationManager nm = (NotificationManager) context.getSystemService(ns);
-				// create Notification
-				/*
-				 * final Notification notification = new
-				 * Notification.Builder(this).setContentTitle(title)
-				 * .setContentText(contentText
-				 * ).setTicker(tickerText).setContentIntent(contentIntent)
-				 * .setSmallIcon(iconRes).setOngoing(true) //
-				 * .setWhen(System.currentTimeMillis()) .getNotification();
-				 * nm.notify(id, notification);
-				 */
-				Log.i(TAG, "\n---------------createNotification: id: " + id + "  title: " + title);
-		}
-
-		private void cancelNotification(Context context, int id) {
-				Log.i(TAG, "\n---------------cancelNotification: id: " + id);
-				String ns = Context.NOTIFICATION_SERVICE;
-				NotificationManager mNotificationManager = (NotificationManager) context
-								.getSystemService(ns);
-				mNotificationManager.cancel(id);
-				// mNotificationManager.cancel(DOWNLOAD_PROGRESS);
-				// pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		}
-
-		private void showDialog(Context context, String msg) {
-				new AlertDialog.Builder(context)
-								.setMessage(msg)
-								.setPositiveButton(android.R.string.ok,
-												new DialogInterface.OnClickListener() {
-														@Override
-														public void onClick(DialogInterface dialog,
-																		int which) {
-																dialog.cancel();
-
-														}
-												}).create().show();
-				String str;
-		}
-
-		public static void log(String tag, String msg) {
-				Log.d(tag, "harry --> " + msg);
-		}
-
-		public static void log(String msg) {
-				Log.d("harry", "harry --> " + msg);
-		}
+	public static void Log(String msg) {
+		Log.d("harry", "harry --> " + msg);
+	}
 }

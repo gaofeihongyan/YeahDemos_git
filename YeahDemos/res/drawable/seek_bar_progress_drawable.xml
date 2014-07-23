@@ -3,12 +3,12 @@
 
     <item
         android:id="@android:id/background"
-        android:drawable="@drawable/fragment_player_progress_bar_bg"/>
+        android:drawable="@drawable/seek_bar_progress_bg"/>
     <item android:id="@android:id/progress">
-        <clip android:drawable="@drawable/fragment_player_progress_bar_unit" />
+        <clip android:drawable="@drawable/transparent_background" />
     </item>
     <item android:id="@android:id/secondaryProgress">
-        <clip android:drawable="@drawable/fragment_player_progress_bar_unit" />
+        <clip android:drawable="@drawable/seek_bar_progress_unit" />
     </item>
 
 </layer-list>

@@ -2,33 +2,23 @@
 package org.yeah.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
 import org.yeah.R;
-import org.yeah.util.InstallApkUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import org.yeah.util.Tools;
+import org.yeah.widget.RecordButton;
+import org.yeah.widget.RecordButton.OnFinishedRecordListener;
+import org.yeah.widget.RecordButton.OnStartRecordListener;
 
 public class TestActivity extends Activity implements OnClickListener {
 
@@ -38,7 +28,8 @@ public class TestActivity extends Activity implements OnClickListener {
 		Button btn2;
 		Button btn3;
 		Button btn4;
-		Button btn5;	Button btn6;
+		Button btn5;	
+		RecordButton btn6;
 		Intent intent = new Intent();
 
 		/** Called when the activity is first created. */
@@ -77,16 +68,39 @@ public class TestActivity extends Activity implements OnClickListener {
 				btn5.setText("5");
 				// btn5.setVisibility(View.GONE);
 
-				btn6 = (Button) findViewById(R.id.btn6);
+				btn6 = (RecordButton) findViewById(R.id.btn6);
+				//btn6.setOnTouchListener(l);
+				//btn6.setSavePath("record_test");
 				btn6.setOnClickListener(this);
-				btn6.setText("6");
+				//btn6.setText("6");
+				btn6.setOnStartRecordListener(new OnStartRecordListener() {
+					
+					@Override
+					public void onStartRecord() {
+						Tools.Log("onStartRecord");
+					}
+				});
+				
+				btn6.setOnFinishedRecordListener(new OnFinishedRecordListener() {
+					
+					@Override
+					public void onFinishedRecord(boolean isCancel) {
+						Tools.Log("onFinishedRecord");
+						
+					}
+				});
 
 		}
 
-		List<byte[]> list = new ArrayList<byte[]>();
-		byte[] data = new byte[] {
-						8
-		};
+		
+		
+		@Override
+		public boolean onTouchEvent(MotionEvent event) {
+			// TODO Auto-generated method stub
+			return super.onTouchEvent(event);
+		}
+
+
 
 		// @Override
 		public void onClick(View v) {
